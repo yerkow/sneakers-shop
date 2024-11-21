@@ -6,6 +6,7 @@
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.0.1",
     "@testing-library/user-event": "^14.5.2",
+    "axios": "^1.7.7",
     "macro-css": "^1.0.5",
     "node-sass": "^9.0.0",
     "prettier": "^3.3.3",

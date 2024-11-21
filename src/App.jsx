@@ -1,40 +1,38 @@
 import Card from "./components/Card/Card";
-import Header from "./components/Header";
-import Cart from "./components/Cart";
-
-const arr = [
-  {
-    name: "Мужские кроссовки Nike Blazer Mid Suede",
-    price: 12500,
-    imageUrl: "/img/sneakers/1.jpg",
-  },
-  {
-    name: "Мужские кроссовки Nike Air Max 270",
-    price: 19800,
-    imageUrl: "/img/sneakers/2.jpg",
-  },
-  {
-    name: "Мужские кроссовки Nike Air Max 270",
-    price: 12314,
-    imageUrl: "/img/sneakers/3.jpg",
-  },
-  {
-    name: "Мужские кроссовки Nike Air Max 270",
-    price: 52312,
-    imageUrl: "/img/sneakers/4.jpg",
-  },
-  {
-    name: "Мужские кроссовки Nike Air Max 270",
-    price: 14125,
-    imageUrl: "/img/sneakers/5.jpg",
-  },
-];
+import Header from "./components/Header/Header";
+import Cart from "./components/Cart/Cart";
+import React from "react";
 
 function App() {
+  const [items, setItems] = React.useState([]);
+  const [cartItems, setCartItems] = React.useState([]);
+  const [favouriteItems, setFavouriteItems] = React.useState([]);
+  const [isCartOpened, setCartOpened] = React.useState(false);
+
+  React.useEffect(() => {
+    fetch("https://673ed8cea9bc276ec4b5eb70.mockapi.io/items")
+      .then((res) => {
+        return res.json();
+      })
+      .then((json) => {
+        setItems(json);
+      });
+  }, []);
+
+  const onAddToCart = (obj) => {
+    setCartItems((prev) => [...cartItems, obj]);
+  };
+
+  const onAddToFavourite = (obj) => {
+    setFavouriteItems((prev) => [...favouriteItems, obj]);
+  };
+
   return (
     <div className="wrapper clear">
-      <Cart />
-      <Header />
+      {isCartOpened && (
+        <Cart items={cartItems} onClose={() => setCartOpened(false)} />
+      )}
+      <Header onClickCart={() => setCartOpened(true)} />
       <div className="content p-40">
         <div className="d-flex align-center justify-between mb-40">
           <h1>Все кроссовки</h1>
@@ -45,12 +43,13 @@ function App() {
         </div>
 
         <div className="d-flex flex-wrap">
-          {arr.map((obj) => (
+          {items.map((item) => (
             <Card
-              title={obj.name}
-              price={obj.price}
-              imageUrl={obj.imageUrl}
-              onClick={() => console.log(obj)}
+              title={item.name}
+              price={item.price}
+              imageUrl={item.imageUrl}
+              onClickFavourite={(obj) => onAddToFavourite(obj)}
+              onClickPlus={(obj) => onAddToCart(obj)}
             />
           ))}
         </div>
